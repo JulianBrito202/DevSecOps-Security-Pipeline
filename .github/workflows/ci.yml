@@ -41,3 +41,15 @@ jobs:
       - name: Run Semgrep Security Scan
         run: |
           semgrep scan --config=auto app
+
+      - name: Build Docker Image
+        run: |
+          docker build -t devsecops-security-pipeline .
+
+      - name: Run Trivy Container Scan
+        uses: aquasecurity/trivy-action@0.24.0
+        with:
+          image-ref: devsecops-security-pipeline
+          format: table
+          exit-code: 1
+          severity: CRITICAL,HIGH
